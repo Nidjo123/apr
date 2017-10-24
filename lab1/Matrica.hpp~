@@ -1,0 +1,42 @@
+#ifndef MATRICA_HPP
+#define MATRICA_HPP
+
+#include<vector>
+#include<string>
+
+template<typename T>
+class Matrica {
+public:
+  Matrica(int);
+  Matrica(int, int);
+  Matrica(std::string);
+  Matrica(const Matrica&);
+  Matrica(Matrica&&);
+  
+  virtual ~Matrica();
+  
+  Matrica operator=(const Matrica&);
+  const std::vector<T>& operator[](int) const;
+  std::vector<T>& operator[](int);
+  bool operator==(const Matrica&) const;
+  Matrica& operator+=(const Matrica&);
+  Matrica& operator-=(const Matrica&);
+  
+  template<typename S>
+  Matrica operator*(S) const;
+
+  template<typename S>
+  Matrica& operator*=(S);
+
+  void ispisUDatoteku(std::string) const;
+  void ispis() const;
+
+  static Matrica jedinicna(int);
+  
+private:
+  static bool provjeriDimenzije(const Matrica&, const Matrica&);
+  
+  std::vector<std::vector<T>> elem;
+};
+
+#endif

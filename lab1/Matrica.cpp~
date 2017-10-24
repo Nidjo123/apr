@@ -1,0 +1,123 @@
+#include "Matrica.hpp"
+#include<iostream>
+#include<fstream>
+
+template<typename T>
+Matrica<T>::Matrica(int n) : Matrica<T>(n, n) {
+
+}
+
+template<typename T>
+Matrica<T>::Matrica(int r, int s) : elem(r) {
+  for (auto& redak : elem) {
+    redak.resize(s);
+  }
+}
+
+template<typename T>
+Matrica<T>::Matrica(const Matrica& m) : elem(m.elem) {
+}
+
+template<typename T>
+Matrica<T>::Matrica(Matrica&& m) : elem(m.elem) {
+  m.elem.clear();
+}
+
+template<typename T>
+Matrica<T>::~Matrica() {
+
+}
+
+template<typename T>
+Matrica<T> Matrica<T>::operator=(const Matrica<T>& m) {
+  elem = m.elem;
+}
+
+template<typename T>
+const std::vector<T>& Matrica<T>::operator[](int i) const {
+  return elem[i];
+}
+
+template<typename T>
+std::vector<T>& Matrica<T>::operator[](int i) {
+  return elem[i];
+}
+
+template<typename T>
+bool Matrica<T>::operator==(const Matrica<T>& m) const {
+  const int r = elem.size();
+  if (r != m.elem.size()) return false;
+  if (r > 0 && elem[0].size() != m.elem[0].size()) return false;
+  const int s = elem[0].size();
+
+  for (int i = 0; i < r; i++) {
+    for (int j = 0; j < s; j++) {
+      if (elem[i][j] != m.elem[i][j]) return false;
+    }
+  }
+
+  return true;
+}
+
+template<typename T>
+template<typename S>
+Matrica<T> Matrica<T>::operator*(S s) const {
+  Matrica<T> m(*this);
+
+  return m *= s;
+}
+
+template<typename T>
+template<typename S>
+Matrica<T>& Matrica<T>::operator*=(S s) {
+  for (auto& r : elem) {
+    for (auto& x : r) {
+      x *= s;
+    }
+  }
+
+  return *this;
+}
+
+template<typename T>
+void Matrica<T>::ispisUDatoteku(std::string datoteka) const {
+  std::ofstream ofs(datoteka);
+
+  if (!ofstream) {
+    std::cout << "Ne mogu otvoriti datoteku!" << std::endl;
+  }
+
+  for (const auto& r : elem) {
+    for (const auto& x : r) {
+      ofs << x << ' ';
+    }
+    ofs << std::endl;
+  }
+}
+
+template<typename T>
+void Matrica<T>::ispis() const {
+  for (const auto& r : elem) {
+    for (const auto& x : r) {
+      std::cout << x << '\t';
+    }
+    std::cout << '\n';
+  }
+
+  std::cout << std::endl;
+}
+
+template<typename T>
+Matrica<T> Matrica<T>::jedinicna(int n) {
+  Matrica<T> E(n, n);
+
+  for (int i = 0; i < n; i++) {
+    E[i][i] = 1;
+  }
+
+  return E;
+}
+
+int main() {
+  std::cout << "Test" << std::endl;
+}
