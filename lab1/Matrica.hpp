@@ -38,14 +38,9 @@ public:
   bool operator==(const Matrica&) const;
   Matrica& operator+=(const Matrica&);
   Matrica& operator-=(const Matrica&);
-
   Matrica operator+(const Matrica&) const;
   Matrica operator-(const Matrica&) const;
-
   Matrica operator-() const;
-
-  Matrica t() const;
-  std::pair<int, int> dim() const;
   
   template<typename S>
   Matrica operator*(S) const;
@@ -55,8 +50,9 @@ public:
 
   Matrica operator*(const Matrica&) const;
 
-  void ispisUDatoteku(std::string) const;
-  void ispis() const;
+  
+  Matrica t() const;
+  std::pair<int, int> dim() const;
 
   // metode supstitucije
   Matrica supstitucija_unaprijed(const Matrica&) const;
@@ -64,19 +60,24 @@ public:
   // LU dekompozicija, nad ovom matricom
   Matrica LU_dekompozicija() const;
   // LUP dekompozicija, nad ovom matricom
-  Matrica LUP_dekompozicija() const;
+  Matrica LUP_dekompozicija(Matrica&) const;
 
   static Matrica jedinicna(int);
+
+  void ispisUDatoteku(std::string) const;
+  void ispis() const;
   
 private:
   static std::vector<T> split(std::string&);
   static bool provjeriDimenzije(const Matrica&, const Matrica&);
+  bool kvadratna() const;
+  void zamijeni_retke(int, int);
   
   std::vector<std::vector<T>> elem;
   // lista permutacija
   std::vector<size_t> perm;
 
-  static constexpr T eps = 1e-8;
+  static constexpr T eps = 1e-6;
 };
 
 // omoguci operaciju skalar * matrica

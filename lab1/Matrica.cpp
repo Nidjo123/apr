@@ -1,9 +1,9 @@
 #include "Matrica.hpp"
-#include<iostream>
-#include<fstream>
-#include<sstream>
-#include<stdexcept>
-#include<cmath>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <stdexcept>
+#include <cmath>
 
 using pii = std::pair<int, int>;
 
@@ -36,6 +36,9 @@ Matrica<T>::Matrica(int r, int s) : elem(r), perm(r) {
   for (auto& redak : elem) {
     redak.resize(s);
   }
+
+  // na pocetku nista nije permutirano
+  for (int i = 0; i < r; i++) perm[i] = i;
 }
 
 template<typename T>
@@ -66,7 +69,7 @@ Matrica<T>::Matrica(const std::string file) {
     std::string line;
     std::getline(ifs, line);
 
-    if (ifs.eof()) break;
+    if (ifs.eof() || line.empty()) break;
 
     std::vector<T> v{split(line)};
     if (v.size() <= 0) continue;
@@ -81,6 +84,8 @@ Matrica<T>::Matrica(const std::string file) {
   }
 
   perm.resize(elem.size());
+  for (int i = 0; i < perm.size(); i++)
+    perm[i] = i;
 }
 
 template<typename T>
@@ -127,25 +132,23 @@ void check_index(const Matrica<T>& M, int i) {
 template<typename T>
 const std::vector<T>& Matrica<T>::operator[](int i) const {
   check_index(*this, i);
-  return elem[i];
+  return elem[perm[i]];
 }
 
 template<typename T>
 std::vector<T>& Matrica<T>::operator[](int i) {
   check_index(*this, i);
-  return elem[i];
+  return elem[perm[i]];
 }
 
 template<typename T>
-bool Matrica<T>::operator==(const Matrica<T>& m) const {
-  const int r = elem.size();
-  if (r != m.elem.size()) return false;
-  if (r > 0 && elem[0].size() != m.elem[0].size()) return false;
-  const int s = elem[0].size();
+bool Matrica<T>::operator==(const Matrica<T>& M) const {
+  const pii dims = dim();
+  if (dims != M.dim()) throw Matrica_exception("Matrice nisu jednakih dimenzija!");
 
-  for (int i = 0; i < r; i++) {
-    for (int j = 0; j < s; j++) {
-      if (std::abs(elem[i][j] - m.elem[i][j]) >= eps) return false;
+  for (int i = 0; i < dims.first; i++) {
+    for (int j = 0; j < dims.second; j++) {
+      if (std::abs((*this)[i][j] - M[i][j]) >= eps) return false;
     }
   }
 
@@ -195,8 +198,6 @@ template<typename T>
 Matrica<T> Matrica<T>::operator-(const Matrica<T>& M) const {
   return Matrica<T>(*this) -= M;
 }
-
-
 
 template<typename T>
 bool ulancane(Matrica<T> A, Matrica<T> B) {
@@ -267,26 +268,35 @@ void Matrica<T>::ispisUDatoteku(std::string datoteka) const {
     std::cout << "Ne mogu otvoriti datoteku!" << std::endl;
   }
 
-  for (const auto& r : elem) {
-    for (const auto& x : r) {
-      ofs << x << ' ';
+  
+  const pii dims = dim();
+  std::cout << "(" << dims.first << ", " << dims.second << ")" << std::endl;
+  
+  for (int i = 0; i < dims.first; i++) {
+    for (int j = 0; j < dims.second; j++) {
+      ofs << (*this)[i][j] << '\t';
     }
-    ofs << std::endl;
+    ofs << '\n';
   }
+  ofs << std::endl;
+
+  ofs << std::endl;
 
   std::cout << "Ispisano u datoteku: " << datoteka << std::endl;
 }
 
 template<typename T>
 void Matrica<T>::ispis() const {
-  std::cout << "(" << dim().first << ", " << dim().second << ")" << std::endl;
+  const pii dims = dim();
+  std::cout << "(" << dims.first << ", " << dims.second << ")" << std::endl;
   
-  for (const auto& r : elem) {
-    for (const auto& x : r) {
-      std::cout << x << '\t';
+  for (int i = 0; i < dims.first; i++) {
+    for (int j = 0; j < dims.second; j++) {
+      std::cout << (*this)[i][j] << '\t';
     }
     std::cout << '\n';
   }
+  std::cout << std::endl;
 
   std::cout << std::endl;
 }
@@ -308,11 +318,23 @@ Matrica<T> operator*(S s, const Matrica<T>& M) {
 }
 
 template<typename T>
+bool Matrica<T>::kvadratna() const {
+  const pii dims = dim();
+
+  return dims.first == dims.second;
+}
+
+template<typename T>
+void Matrica<T>::zamijeni_retke(int i, int j) {
+  std::swap(perm[i], perm[j]);
+}
+
+template<typename T>
 Matrica<T> Matrica<T>::supstitucija_unaprijed(const Matrica<T>& b) const {
   const pii dims = dim();
 
   // ova matrica mora biti kvadratna
-  if (dims.first != dims.second) throw Matrica_exception("Matrica nije kvadratna!");
+  if (!kvadratna()) throw Matrica_exception("Matrica nije kvadratna!");
 
   (*this).ispis();
   b.ispis();
@@ -343,7 +365,7 @@ Matrica<T> Matrica<T>::supstitucija_unatrag(const Matrica& y) const {
   const pii dims = dim();
 
   // ova matrica mora biti kvadratna
-  if (dims.first != dims.second) throw Matrica_exception("Matrica nije kvadratna!");
+  if (!kvadratna()) throw Matrica_exception("Matrica nije kvadratna!");
 
   // ova matrica i vektor y moraju imati isti broj redaka
   if (dims.first != y.dim().first) throw std::invalid_argument("Dimenzije matrice i vektora y se ne podudaraju!");
@@ -364,12 +386,11 @@ Matrica<T> Matrica<T>::supstitucija_unatrag(const Matrica& y) const {
 
 template<typename T>
 Matrica<T> Matrica<T>::LU_dekompozicija() const {
-  const pii dims = dim();
-  if (dims.first != dims.second) throw Matrica_exception("Matrica nije kvadratna!");
+  if (!kvadratna()) throw Matrica_exception("Matrica nije kvadratna!");
   
   Matrica<T> A(*this);
 
-  const int N = dims.first;
+  const int N = dim().first;
 
   // prvi redak ostaje isti, krecemo od drugog retka
   for (int i = 0; i < N - 1; i++) {
@@ -383,6 +404,51 @@ Matrica<T> Matrica<T>::LU_dekompozicija() const {
       }
     }
     A.ispis();
+  }
+
+  return A;
+}
+
+template<typename T>
+Matrica<T> Matrica<T>::LUP_dekompozicija(Matrica& b) const {
+  if (!kvadratna()) throw Matrica_exception("Matrica nije kvadratna!");
+
+  Matrica<T> A(*this);
+
+  const int N = dim().first;
+  
+  for (int i = 0; i < N - 1; i++) {
+    // nadji najveci element po apsolutnom iznosu (pivot)
+    int max_i = i;
+    T max_v = (*this)[i][i];
+    for (int r = i + 1; r < N; r++) {
+      if ((*this)[r][i] > max_v) {
+	max_v = (*this)[r][i];
+	max_i = r;
+      }
+    }
+
+    // provjeri je li to 0
+    if (std::abs(max_v) < eps) throw Matrica_exception("Pivot element je 0! Stajem!");
+    
+    // zamijeni trenutni redak i redak s najvecim elementom
+    if (i != max_i) {
+      std::cout << "Mijenjam retke " << i << " i " << max_i << std::endl;
+      A.zamijeni_retke(i, max_i);
+      A.ispis();
+      // ne smijemo zaboraviti permutirati i retke matrice b
+      b.zamijeni_retke(i, max_i);
+    }
+
+    // dalje racunamo kao kod LU dekompozicije
+    for (int j = i + 1; j < N; j++) {
+      // prvo podijelimo trenutni element sa stozerom
+      A[j][i] /= A[i][i];
+      for (int k = i + 1; k < N; k++) {
+	// zatim od ostalih elemenata trenutnog retka oduzmemo umnozak A[j][i] * A[i][k]
+	A[j][k] -= A[j][i] * A[i][k];
+      }
+    }
   }
 
   return A;
@@ -448,6 +514,8 @@ int main(int argc, char *argv[]) {
     
     if (metoda == "LU") {
       X = A.LU_dekompozicija();
+    } else {
+      X = A.LUP_dekompozicija(b);
     }
 
     std::cout << "Dekompozicija zavrsena, dobivena matrica: \n";
