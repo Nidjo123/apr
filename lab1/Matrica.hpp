@@ -41,6 +41,12 @@ public:
   Matrica operator+(const Matrica&) const;
   Matrica operator-(const Matrica&) const;
   Matrica operator-() const;
+
+  template<typename S>
+  Matrica operator/(S) const;
+
+  template<typename S>
+  Matrica& operator/=(S);
   
   template<typename S>
   Matrica operator*(S) const;
@@ -72,6 +78,7 @@ private:
   static bool provjeriDimenzije(const Matrica&, const Matrica&);
   bool kvadratna() const;
   void zamijeni_retke(int, int);
+  bool nule_na_dijagonali() const;
   
   std::vector<std::vector<T>> elem;
   // lista permutacija

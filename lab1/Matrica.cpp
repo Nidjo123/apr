@@ -7,6 +7,7 @@
 
 using pii = std::pair<int, int>;
 
+//////////// Matrica_exception
 Matrica_exception::Matrica_exception() {
 }
 
@@ -18,7 +19,10 @@ Matrica_exception::~Matrica_exception() noexcept {}
 const char* Matrica_exception::what() const noexcept {
   return message.c_str();
 }
+////////////
 
+
+//////////// Konstruktori
 template<typename T>
 Matrica<T>::Matrica() : Matrica<T>(1) {
 }
@@ -27,10 +31,12 @@ template<typename T>
 Matrica<T>::Matrica(const pii& dims) : Matrica<T>(dims.first, dims.second) {
 }
 
+// kvadratna matrica n
 template<typename T>
 Matrica<T>::Matrica(int n) : Matrica<T>(n, n) {
 }
 
+// broj redaka i stupaca
 template<typename T>
 Matrica<T>::Matrica(int r, int s) : elem(r), perm(r) {
   for (auto& redak : elem) {
@@ -41,6 +47,7 @@ Matrica<T>::Matrica(int r, int s) : elem(r), perm(r) {
   for (int i = 0; i < r; i++) perm[i] = i;
 }
 
+// razdvaja ulazni string n po bjelinama
 template<typename T>
 std::vector<T> Matrica<T>::split(std::string &s) {
   std::istringstream iss(s);
@@ -57,6 +64,7 @@ std::vector<T> Matrica<T>::split(std::string &s) {
   return res;
 }
 
+// ucitava matricu iz datoteke
 template<typename T>
 Matrica<T>::Matrica(const std::string file) {
   std::ifstream ifs(file);
@@ -88,25 +96,31 @@ Matrica<T>::Matrica(const std::string file) {
     perm[i] = i;
 }
 
+// konstruktor kopije
 template<typename T>
 Matrica<T>::Matrica(const Matrica& m) : elem(m.elem), perm(m.perm) {
   
 }
 
+// move konstruktor
 template<typename T>
 Matrica<T>::Matrica(Matrica&& m) : elem(m.elem), perm(m.perm) {
   
 }
 
+// destruktor
 template<typename T>
 Matrica<T>::~Matrica() {
 }
+////////////
 
+// dimenzije matrice u obliku para integera (r, s)
 template<typename T>
 pii Matrica<T>::dim() const {
   return std::make_pair(elem.size(), elem[0].size());
 }
 
+//////////// operatori
 template<typename T>
 Matrica<T>& Matrica<T>::operator=(const Matrica<T>& M) {
   elem = M.elem;
@@ -123,6 +137,7 @@ Matrica<T>& Matrica<T>::operator=(Matrica<T>&& m) {
   return *this;
 }
 
+// provjera indeksa
 template<typename T>
 void check_index(const Matrica<T>& M, int i) {
   const int N = M.dim().first;
@@ -199,11 +214,13 @@ Matrica<T> Matrica<T>::operator-(const Matrica<T>& M) const {
   return Matrica<T>(*this) -= M;
 }
 
+// jesu li matrice A i B ulancane?
 template<typename T>
 bool ulancane(Matrica<T> A, Matrica<T> B) {
   return A.dim().second == B.dim().first;
 }
 
+// transponiranje matrice
 template<typename T>
 Matrica<T> Matrica<T>::t() const {
   Matrica res(elem[0].size(), elem.size());
@@ -217,6 +234,28 @@ Matrica<T> Matrica<T>::t() const {
   return res;
 }
 
+// dijeljenje skalarom
+template<typename T>
+template<typename S>
+Matrica<T> Matrica<T>::operator/(S s) const {
+  Matrica<T> res{*this};
+
+  return res /= s;
+}
+
+template<typename T>
+template<typename S>
+Matrica<T>& Matrica<T>::operator/=(S s) {
+  if (std::abs(s) < eps) throw Matrica_exception("Dijeljenje s nulom!");
+
+  for (auto& v : elem) {
+    for (auto& x : v) x /= s;
+  }
+
+  return *this;
+}
+
+// mnozenje skalarom
 template<typename T>
 template<typename S>
 Matrica<T> Matrica<T>::operator*(S s) const {
@@ -237,6 +276,7 @@ Matrica<T>& Matrica<T>::operator*=(S s) {
   return *this;
 }
 
+// mnozenje matricom
 template<typename T>
 Matrica<T> Matrica<T>::operator*(const Matrica<T> &M) const {
   if (!ulancane(*this, M)) throw std::invalid_argument("Matrice nisu ulancane!");
@@ -285,6 +325,7 @@ void Matrica<T>::ispisUDatoteku(std::string datoteka) const {
   std::cout << "Ispisano u datoteku: " << datoteka << std::endl;
 }
 
+// ispis na standardni izlaz
 template<typename T>
 void Matrica<T>::ispis() const {
   const pii dims = dim();
@@ -301,6 +342,7 @@ void Matrica<T>::ispis() const {
   std::cout << std::endl;
 }
 
+// jedinicna matrica velicine n
 template<typename T>
 Matrica<T> Matrica<T>::jedinicna(int n) {
   Matrica<T> E(n, n);
@@ -317,6 +359,7 @@ Matrica<T> operator*(S s, const Matrica<T>& M) {
   return M * s;
 }
 
+// je li matrica kvadratna?
 template<typename T>
 bool Matrica<T>::kvadratna() const {
   const pii dims = dim();
@@ -324,6 +367,17 @@ bool Matrica<T>::kvadratna() const {
   return dims.first == dims.second;
 }
 
+// ima li matrica nula na dijagonali?
+template<typename T>
+bool Matrica<T>::nule_na_dijagonali() const {
+  for (int i = 0; i < dim().first; i++) {
+    if (std::abs((*this)[i][i]) < eps) return true;
+  }
+
+  return false;
+}
+
+// zamijena redaka u permutacijskom vektoru
 template<typename T>
 void Matrica<T>::zamijeni_retke(int i, int j) {
   std::swap(perm[i], perm[j]);
@@ -406,6 +460,8 @@ Matrica<T> Matrica<T>::LU_dekompozicija() const {
     A.ispis();
   }
 
+  if (A.nule_na_dijagonali()) throw Matrica_exception("Sustav nije rjesiv!");
+
   return A;
 }
 
@@ -420,10 +476,10 @@ Matrica<T> Matrica<T>::LUP_dekompozicija(Matrica& b) const {
   for (int i = 0; i < N - 1; i++) {
     // nadji najveci element po apsolutnom iznosu (pivot)
     int max_i = i;
-    T max_v = (*this)[i][i];
+    T max_v = std::abs(A[i][i]);
     for (int r = i + 1; r < N; r++) {
-      if ((*this)[r][i] > max_v) {
-	max_v = (*this)[r][i];
+      if (std::abs(A[r][i]) > max_v) {
+	max_v = std::abs(A[r][i]);
 	max_i = r;
       }
     }
@@ -449,7 +505,11 @@ Matrica<T> Matrica<T>::LUP_dekompozicija(Matrica& b) const {
 	A[j][k] -= A[j][i] * A[i][k];
       }
     }
+
+    A.ispis();
   }
+
+  if (A.nule_na_dijagonali()) throw Matrica_exception("Sustav nije rjesiv!");
 
   return A;
 }
