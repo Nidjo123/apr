@@ -67,8 +67,11 @@ Matrica<T>::Matrica(const std::string file) {
     std::getline(ifs, line);
 
     if (ifs.eof()) break;
+
+    std::vector<T> v{split(line)};
+    if (v.size() <= 0) continue;
     
-    elem.push_back(split(line));
+    elem.push_back(v);
 
     const size_t elem_size = elem.size();
     
@@ -440,27 +443,32 @@ int main(int argc, char *argv[]) {
 
   std::cout << "Koristim metodu: " << metoda << std::endl;
 
-  Matricad X;
+  try {
+    Matricad X;
+    
+    if (metoda == "LU") {
+      X = A.LU_dekompozicija();
+    }
 
-  if (metoda == "LU") {
-    X = A.LU_dekompozicija();
+    std::cout << "Dekompozicija zavrsena, dobivena matrica: \n";
+    X.ispis();
+
+    std::cout << "Radim supstituciju unaprijed.\n";
+    Matricad y{X.supstitucija_unaprijed(b)};
+
+    std::cout << "Vektor y:\n";
+    y.ispis();
+
+    std::cout << "Radim supstituciju unatrag.\n";
+    Matricad x{X.supstitucija_unatrag(y)};
+
+    std::cout << "Vektor x (rjesenje):\n";
+    x.ispis();
+  } catch (Matrica_exception e) {
+    std::cerr << e.what() << std::endl;
+  } catch (std::exception e) {
+    std::cerr << e.what() << std::endl;
   }
- 
-
-  std::cout << "Dekompozicija zavrsena, dobivena matrica: \n";
-  X.ispis();
-
-  std::cout << "Radim supstituciju unaprijed.\n";
-  Matricad y{X.supstitucija_unaprijed(b)};
-
-  std::cout << "Vektor y:\n";
-  y.ispis();
-
-  std::cout << "Radim supstituciju unatrag.\n";
-  Matricad x{X.supstitucija_unatrag(y)};
-
-  std::cout << "Vektor x (rjesenje):\n";
-  x.ispis();
 
   return 0;
 } 
