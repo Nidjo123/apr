@@ -1,0 +1,74 @@
+#include "ZlatniRez.hpp"
+#include <cmath>
+#include <cstdio>
+
+const double k = 0.5 * (sqrt(5.0) - 1.0);
+
+double zlatni_rez(Funkcija f, double a, double b, double e = 1e-6) {
+  double c = b - k * (b - a);
+  double d = a + k * (b - a);
+  double fc = f(c);
+  doulbe fd = f(d);
+
+  printf("Zlatni rez na intervalu [%f, %f] uz e = %f\n", a, b, e);
+  printf("");
+  
+  while ((b - a) > e) {
+    printf();
+    
+    if (fc < fd) {
+      b = d;
+      d = c;
+      c = b - k * (b - a);
+      fd = fc;
+      fc = f(c);
+    } else {
+      a = c;
+      c = d;
+      d = a + k * (b - a);
+      fc = fd;
+      fd = f(d);
+    }
+  }
+
+  return (a + b) / 2;
+}
+
+double zlatni_rez(Funkcija f, double tocka, double e = 1e-6) {
+  double l, r;
+
+  unimodalni(f, 0.01, tocka, l, r);
+
+  return zlatni_rez(f, l, r, e);
+}
+
+void unimodalni(Funkcija f, double h, double tocka, double &l, double &r) {
+  l = tocka - h, r = tocka + h;
+  double m = tocka;
+  double fl, fm, fr;
+  unsigned step = 1;
+
+  fm = f(tocka);
+  fl = f(l);
+  fr = f(r);
+
+  if (fm < fr && fm < fl) {
+    return;
+  } else if (fm > fr) {
+    do {
+      l = m;
+      m = r;
+      fm = fr;
+      r = tocka + h * (step *= 2);
+      fr = f(r);
+    } while (fm > fr);
+  } else {
+    do {
+      r = m;
+      m = l;
+      fm = fl;
+      l = tocka - h * (step *= 2);
+      fl = f(l);
+    } while (fm > fl);
+  }
+}

@@ -1,0 +1,10 @@
+#ifndef ZLATNI_REZ_HPP
+#define ZLATNI_REZ_HPP
+
+
+
+const double k = 
+
+  double zlatni_rez(double a, double b, double e);
+
+#endif

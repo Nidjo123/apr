@@ -1,0 +1,10 @@
+#ifndef ZLATNI_REZ_HPP
+#define ZLATNI_REZ_HPP
+
+#include "Funkcija.hpp"
+
+double zlatni_rez(Funkcija &f, double tocka, double e);
+double zlatni_rez(Funkcija &f, double a, double b, double e);
+void unimodalni(Funkcija &f, double h, double tocka, double &l, double &r);
+
+#endif
