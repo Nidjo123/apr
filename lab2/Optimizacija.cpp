@@ -135,7 +135,6 @@ valarray_d nelder_mead_simpleks(Funkcija &f, valarray_d x_0, double pomak, doubl
   // pocetni simpleks
   for (int i = 0; i < n; i++) {
     simpleks[i][i] += pomak;
-    ispis(simpleks[i]);
   }
 
   do {
@@ -229,4 +228,72 @@ valarray_d nelder_mead_simpleks(Funkcija &f, valarray_d x_0, double pomak, doubl
   } while(sqrt(1.0/n*uvjet) > eps);
 
   return res;
+}
+
+valarray_d istrazi(Funkcija &f, valarray_d xp, valarray_d dx) {
+  valarray_d x = xp;
+  const int n = xp.size();
+  
+  for (int i = 0; i < n; i++) {
+    const double P = f(x);
+    // pomak za dx
+    x[i] += dx[i];
+    double N = f(x);
+
+    // ako je vece -> ne valja
+    if (N > P) {
+      x[i] -= 2.0*dx[i]; // probamo na drugu stranu
+      N = f(x);
+      if (N > P) // ako je opet vece -> vracamo se na staro
+	x[i] += dx[i];
+    }
+  }
+
+  return x;
+}
+
+valarray_d hooke_jeeves(Funkcija &f, valarray_d x_0, valarray_d dx, valarray_d eps, bool verbose) {
+  const int n = x_0.size();
+  valarray_d xp = x_0;
+  valarray_d xb = x_0;
+  
+  bool kraj;
+
+  if (verbose) {
+    printf("xB, xp, xn\n");
+  }
+  
+  do {
+    valarray_d xn = istrazi(f, xp, dx);
+    const double f_xn = f(xn);
+    const double f_xp = f(xp);
+    const double f_xb = f(xb);
+
+    if (verbose) {
+      ispis(xb);
+      ispis(xp);
+      ispis(xn);
+    
+      printf("%f %f %f\n", f_xb, f_xp, f_xn);
+    }
+    
+    if (f_xn < f_xb) {
+      // prihvacamo baznu tocku
+      // xp je nova tocka pretrazivanja
+      xp = 2.0 * xn - xb;
+      xb = xn;
+    } else {
+      // smanjimo pomak
+      dx *= 0.5;
+      xp = xb; // vracamo se na zadnju barnu tocku
+    }
+
+    kraj = true;
+
+    for (int i = 0; i < n && kraj; i++) {
+      if (dx[i] >= eps[i]) kraj = false;
+    }
+  } while(!kraj);
+
+  return xb;
 }
