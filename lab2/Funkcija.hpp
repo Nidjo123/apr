@@ -40,6 +40,12 @@ class Funkcija3 : public Funkcija {
   virtual double operator()(std::valarray<double> x);
 };
 
+// jednodimenzijska f3 s minimum u 3
+// x_min = 3, f_min = 0
+class Funkcija3_2 : public Funkcija {
+  virtual double operator()(std::valarray<double> x);
+};
+
 // Jakoboviceva funkcija
 // x_min = (0, 0), f_min = 0
 class Funkcija4 : public Funkcija {

@@ -67,6 +67,14 @@ double Funkcija3::operator()(valarray_d x) {
   return {res};
 }
 
+double Funkcija3_2::operator()(valarray_d x) {
+  brojac_poziva++;
+
+  double a = x[0] - 3;
+
+  return a*a;
+}
+
 double Funkcija4::operator()(valarray_d x) {
   check_dims(2, x);
   brojac_poziva++;

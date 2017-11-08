@@ -270,8 +270,15 @@ valarray_d hooke_jeeves(Funkcija &f, valarray_d x_0, valarray_d dx, valarray_d e
     const double f_xb = f(xb);
 
     if (verbose) {
+      std::cout << "dx: ";
+      ispis(dx);
+      std::cout << "eps: ";
+      ispis(eps);
+      std::cout << "xb: ";
       ispis(xb);
+      std::cout << "xp: ";
       ispis(xp);
+      std::cout << "xn: ";
       ispis(xn);
     
       printf("%f %f %f\n", f_xb, f_xp, f_xn);
@@ -291,7 +298,7 @@ valarray_d hooke_jeeves(Funkcija &f, valarray_d x_0, valarray_d dx, valarray_d e
     kraj = true;
 
     for (int i = 0; i < n && kraj; i++) {
-      if (dx[i] >= eps[i]) kraj = false;
+      if (dx[i] > eps[i]) kraj = false;
     }
   } while(!kraj);
 
