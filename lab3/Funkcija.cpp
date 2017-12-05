@@ -1,9 +1,11 @@
 #include "Funkcija.hpp"
+#include "Util.hpp"
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
 
 using valarray_d = std::valarray<double>;
+using valarray_b = std::valarray<bool>;
 using Matrica_d = Matrica<double>;
 
 double Funkcija::operator()(double x) {
@@ -34,6 +36,23 @@ void Funkcija::reset() {
   fcalls = 0;
   gradients = 0;
   hessians = 0;
+}
+
+ExplicitConstraint::ExplicitConstraint(const valarray_d x1, const valarray_d x2) : x1(x1), x2(x2) {
+  
+}
+
+bool ExplicitConstraint::check(const valarray_d &x) {
+  const valarray_b res = (x1 <= x) & (x <= x2);
+  return std::all_of(std::begin(res), std::end(res), [](bool x) {return x;});
+}
+
+ImplicitConstraint::ImplicitConstraint(std::function<bool(const valarray_d)> f) : f(f) {
+
+}
+
+bool ImplicitConstraint::check(const valarray_d &x) {
+  return f(x) >= 0;
 }
 
 Funkcija1D::Funkcija1D(Funkcija &fun, valarray_d x_const, int ind) : f(fun), i(ind), x_(x_const) {
@@ -85,7 +104,7 @@ Matrica_d Funkcija1::hessian(const valarray_d x) {
   
   Matrica_d H(2, 2);
 
-  H[0][0] = 1200.0 * x[0]*x[0] - 400.0*x[1] + 2.0;
+  H[0][0] = -400.0*(x[1] - x[0]*x[0]) + 800.0*x[0]*x[0] + 2.0;
   H[0][1] = -400.0*x[0];
   H[1][0] = -400.0*x[0];
   H[1][1] = 200.0;

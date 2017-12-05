@@ -1,0 +1,167 @@
+Drugi zadatak
+Funkcija1:
+Gradijentni spust s linijskim pretrazivanjem:
+Broj poziva funkcije: 396908
+Broj racunanja gradijenta: 14692
+Minimum: (0.999999, 0.999998)
+Vrijednost u minimumu: 7.55018e-013
+
+Newton-Raphson s linijskim pretrazivanjem:
+Gradijent:
+(-1229.4, -322)
+Hessian:
+(2, 2)
+3534	760	
+760	200	
+
+
+Inverse of Hessian:
+(2, 2)
+0.00154799	-0.00588235	
+-0.00588235	0.0273529	
+
+
+Check:
+(2, 2)
+1	0	
+0	1	
+
+
+========
+Trenutna tocka: (-1.9, 2)
+Pomak dx: (0.00897833, 1.57588)
+Gradijent:
+(-5.84302, -0.0161221)
+Hessian:
+(2, 2)
+2862.8	756.409	
+756.409	200	
+
+
+Inverse of Hessian:
+(2, 2)
+0.492067	-1.86102	
+-1.86102	7.04345	
+
+
+Check:
+(2, 2)
+1	0	
+5.68434e-014	1	
+
+
+========
+Trenutna tocka: (-1.89102, 3.57588)
+Pomak dx: (2.84515, -10.7604)
+Gradijent:
+(3089.34, -1618.98)
+Hessian:
+(2, 2)
+3968.25	-381.652	
+-381.652	200	
+
+
+Inverse of Hessian:
+(2, 2)
+0.000308646	0.000588977	
+0.000588977	0.00612392	
+
+
+Check:
+(2, 2)
+1	0	
+-1.38778e-017	1	
+
+
+========
+Trenutna tocka: (0.95413, -7.18452)
+Pomak dx: (2.8315e-005, 8.09494)
+Gradijent:
+(-0.0916826, -1.60349e-007)
+Hessian:
+(2, 2)
+730.335	-381.663	
+-381.663	200	
+
+
+Inverse of Hessian:
+(2, 2)
+0.5	0.954158	
+0.954158	1.82584	
+
+
+Check:
+(2, 2)
+1	0	
+0	1	
+
+
+========
+Trenutna tocka: (0.954159, 0.910419)
+Pomak dx: (0.0458414, 0.08748)
+Gradijent:
+(0.840575, -0.420287)
+Hessian:
+(2, 2)
+802.841	-400	
+-400	200	
+
+
+Inverse of Hessian:
+(2, 2)
+0.352041	0.704083	
+0.704083	1.41317	
+
+
+Check:
+(2, 2)
+1	0	
+0	1	
+
+
+========
+Trenutna tocka: (1, 0.997899)
+Pomak dx: (5.17545e-009, 0.00210145)
+Gradijent:
+(-4.35029e-009, -2.31477e-014)
+Hessian:
+(2, 2)
+802	-400	
+-400	200	
+
+
+Inverse of Hessian:
+(2, 2)
+0.5	1	
+1	2.005	
+
+
+Check:
+(2, 2)
+1	0	
+0	1	
+
+
+========
+Trenutna tocka: (1, 1)
+Pomak dx: (2.17517e-009, 4.35033e-009)
+Broj poziva funkcije: 6
+Broj racunanja gradijenta: 6
+Broj racunanja Hessijana: 6
+Minimum: (1, 1)
+Vrijednost u minimumu: 8.33234e-030
+
+
+Funkcija2:
+Gradijentni spust s linijskim pretrazivanjem:
+Broj poziva funkcije: 1078
+Broj racunanja gradijenta: 28
+Minimum: (4, 2)
+Vrijednost u minimumu: 3.94103e-014
+
+Newton-Raphson s linijskim pretrazivanjem:
+Broj poziva funkcije: 90
+Broj racunanja gradijenta: 2
+Broj racunanja Hessijana: 2
+Minimum: (4, 2)
+Vrijednost u minimumu: 2.89118e-028

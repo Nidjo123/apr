@@ -2,6 +2,7 @@
 #define FUNKCIJA_HPP
 
 #include <valarray>
+#include <functional>
 #include "Matrica.hpp"
 
 class Funkcija {
@@ -19,6 +20,31 @@ protected:
   unsigned fcalls = 0;
   unsigned gradients = 0;
   unsigned hessians = 0;
+};
+
+class Constraint {
+public:
+  virtual bool check(const std::valarray<double> &x) = 0;
+};
+
+class ExplicitConstraint : public Constraint {
+public:
+  ExplicitConstraint(const std::valarray<double> x1, const std::valarray<double> x2);
+
+  virtual bool check(const std::valarray<double> &x);
+
+  const std::valarray<double> x1;
+  const std::valarray<double> x2;
+};
+
+class ImplicitConstraint : public Constraint {
+public:
+  ImplicitConstraint(std::function<bool(const std::valarray<double>)> f);
+
+  virtual bool check(const std::valarray<double> &x);
+  
+private:
+  std::function<bool(const std::valarray<double>)> f;
 };
 
 class Funkcija1D : public Funkcija {

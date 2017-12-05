@@ -593,3 +593,4 @@ valarray_d box(Funkcija &f, valarray_d x0, std::vector<ExplicitConstraint> exps,
 
   return xc;
 }
+

@@ -22,4 +22,8 @@ std::valarray<double> gradijentni_spust(Funkcija &f, std::valarray<double> x_0, 
 
 std::valarray<double> newton_raphson(Funkcija &f, std::valarray<double> x_0, double eps = 1e-6, bool linijsko = true, bool verbose = false);
 
+std::valarray<double> box(Funkcija &f, std::valarray<double> x0, std::vector<ExplicitConstraint> exps, std::vector<ImplicitConstraint> imps, double alpha = 1.3, double eps = 1e-6, bool verbose = false);
+
+std::valarray<double> transformed_constraints(Funkcija &f, std::valarray<double> x0, std::vector<ExplicitConstraint> exps, std::vector<ImplicitConstraint> imps, double t = 1.0, double eps = 1e-6, bool verbose = false);
+
 #endif

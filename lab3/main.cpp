@@ -54,7 +54,7 @@ void drugi() {
 
   std::cout << "\nNewton-Raphson s linijskim pretrazivanjem:" << std::endl;
 
-  const valarray_d minnr1 = newton_raphson(f1, x0_1, 1e-6, true, true);
+  const valarray_d minnr1 = newton_raphson(f1, x0_1, 1e-6, true);
   std::cout << "Broj poziva funkcije: " << f1.fcall_count() << std::endl;
   std::cout << "Broj racunanja gradijenta: " << f1.gradient_count() << std::endl;
   std::cout << "Broj racunanja Hessijana: " << f1.hessian_count() << std::endl;
@@ -87,6 +87,38 @@ void drugi() {
   f2.reset();
 }
 
+void treci() {
+  std::cout << "Treci zadatak\n";
+
+  Funkcija1 f1;
+  Funkcija2 f2;
+  
+  std::vector<ExplicitConstraint> exps = {ExplicitConstraint{{-100.0, -100.0}, {100.0, 100.0}}};
+  std::vector<ImplicitConstraint> imps = {ImplicitConstraint{[](valarray_d x) { return x[1] - x[0];}},
+					  ImplicitConstraint{[](valarray_d x) { return 1.0 - x[0];}}};
+
+  const valarray_d x0_1 = {-1.9, 2.0};
+  const valarray_d x0_2 = {0.1, 0.3};
+
+  std::cout << "Funkcija1:\n";
+  const valarray_d min1 = box(f1, x0_1, exps, imps, 1.3, 1e-6, false);
+
+  std::cout << "Poziva funkcije: " << f1.fcall_count() << std::endl;
+  
+  std::cout << "Minimum: ";
+  ispis(min1);
+  std::cout << "Vrijednost u minimumu: " << f1(min1) << std::endl;
+
+  std::cout << "Funkcija2:\n";
+  const valarray_d min2 = box(f2, x0_2, exps, imps, 1.3, 1e-6, false);
+
+  std::cout << "Poziva funkcije: " << f2.fcall_count() << std::endl;
+  
+  std::cout << "Minimum: ";
+  ispis(min2);
+  std::cout << "Vrijednost u minimumu: " << f2(min2) << std::endl;
+}
+
 int main(int argc, char* argv[]) {
   
   if (argc >= 2) {
@@ -99,6 +131,10 @@ int main(int argc, char* argv[]) {
 
     case 2:
       drugi();
+      break;
+
+    case 3:
+      treci();
       break;
 
     default:

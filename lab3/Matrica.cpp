@@ -248,11 +248,6 @@ bool ulancane(Matrica<T> A, Matrica<T> B) {
   return A.dim().second == B.dim().first;
 }
 
-template<typename T>
-void Matrica<T>::permute(Matrica<T> &A) const {
-  A.perm = perm;
-}
-
 // inverz matrica
 template<typename T>
 Matrica<T> Matrica<T>::inv() const { 
@@ -272,7 +267,7 @@ Matrica<T> Matrica<T>::inv() const {
     Matrica<T> e(n, 1);
     e[i][0] = 1.0;
 
-    e.permute(LUP);
+    e.perm = LUP.perm;
 
     Matricad y{LUP.supstitucija_unaprijed(e)};
     Matricad x{LUP.supstitucija_unatrag(y)};
