@@ -20,4 +20,6 @@ std::valarray<double> hooke_jeeves(Funkcija &f, std::valarray<double> x_0, std::
 
 std::valarray<double> gradijentni_spust(Funkcija &f, std::valarray<double> x_0, double eps = 1e-6, bool linijsko = true, bool verbose = false);
 
+std::valarray<double> newton_raphson(Funkcija &f, std::valarray<double> x_0, double eps = 1e-6, bool linijsko = true, bool verbose = false);
+
 #endif

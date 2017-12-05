@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <iostream>
 #include <algorithm>
+#include <limits>
 
 using valarray_d = std::valarray<double>;
 
@@ -319,6 +320,11 @@ valarray_d hooke_jeeves(Funkcija &f, valarray_d x_0, valarray_d dx, valarray_d e
 valarray_d gradijentni_spust(Funkcija &f, std::valarray<double> x_0, double eps, bool linijsko, bool verbose) {
   valarray_d gradient;
   valarray_d x = x_0;
+
+  double min = std::numeric_limits<double>::infinity();
+  unsigned bez_pomaka = 0;
+
+  const unsigned MAX_BEZ_POMAKA = 100;
   
   do {
     gradient = f.gradient(x);
@@ -342,7 +348,23 @@ valarray_d gradijentni_spust(Funkcija &f, std::valarray<double> x_0, double eps,
       // ali u suprotnom smjeru od gradijenta!
       x -= gradient;
     }
+
+    const double fval = f(x);
+
+    if (fval < min) {
+      min = fval;
+      bez_pomaka = 0;
+    } else {
+      if (++bez_pomaka > MAX_BEZ_POMAKA) {
+	std::cout << "Gradijentni spust je zapeo!" << std::endl;
+	break;
+      }
+    }
   } while (norm(gradient) > eps);
 
   return x;
+}
+
+valarray_d newton_raphson(Funkcija &f, valarray_d x_0, double eps, bool linijsko, bool verbose) {
+
 }
