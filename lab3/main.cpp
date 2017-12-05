@@ -1,9 +1,9 @@
 #include <iostream>
 #include <cstdio>
-#include "Matrica.hpp"
 #include "Funkcija.hpp"
 #include "Optimizacija.hpp"
 #include "Util.hpp"
+#include "Matrica.hpp"
 
 using valarray_d = std::valarray<double>;
 
@@ -66,6 +66,7 @@ void drugi() {
 }
 
 int main(int argc, char* argv[]) {
+  
   if (argc >= 2) {
     int zadatak = atoi(argv[1]);
     

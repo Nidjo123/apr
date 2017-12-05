@@ -1,12 +1,14 @@
-#include "Optimizacija.hpp"
-#include "Util.hpp"
 #include <cmath>
 #include <cstdio>
 #include <iostream>
 #include <algorithm>
 #include <limits>
+#include "Matrica.hpp"
+#include "Optimizacija.hpp"
+#include "Util.hpp"
 
 using valarray_d = std::valarray<double>;
+using Matrica_d = Matrica<double>;
 
 const double k = 0.5 * (sqrt(5.0) - 1.0);
 
@@ -360,11 +362,22 @@ valarray_d gradijentni_spust(Funkcija &f, std::valarray<double> x_0, double eps,
 	break;
       }
     }
-  } while (norm(gradient) > eps);
+  } while(norm(gradient) >= eps);
 
   return x;
 }
 
-valarray_d newton_raphson(Funkcija &f, valarray_d x_0, double eps, bool linijsko, bool verbose) {
 
+valarray_d newton_raphson(Funkcija &f, valarray_d x_0, double eps, bool linijsko, bool verbose) {
+  valarray_d dx;
+  valarray_d x = x_0;
+
+  do {
+    valarray_d gradient = f.gradient(x);
+    Matricad H = f.hessian(x);
+
+    dx = H.inv() * gradient;
+  } while(norm(dx) >= eps);
+
+  return x;
 }

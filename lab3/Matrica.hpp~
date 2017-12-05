@@ -4,7 +4,6 @@
 #include<vector>
 #include<string>
 #include<stdexcept>
-#include<valarray>
 
 class Matrica_exception : public std::exception {
 public:
@@ -29,7 +28,6 @@ public:
   Matrica(const std::string);
   Matrica(const Matrica&);
   Matrica(Matrica&&);
-  Matrica(const std::valarray<T>&);
   
   virtual ~Matrica();
   
@@ -43,8 +41,6 @@ public:
   Matrica operator+(const Matrica&) const;
   Matrica operator-(const Matrica&) const;
   Matrica operator-() const;
-
-  operator std::valarray<T>() const;
 
   template<typename S>
   Matrica operator/(S) const;
@@ -60,11 +56,9 @@ public:
 
   Matrica operator*(const Matrica&) const;
 
-  Matrica inv() const;
+  
   Matrica t() const;
   std::pair<int, int> dim() const;
-
-  void permute(Matrica&) const;
 
   // metode supstitucije
   Matrica supstitucija_unaprijed(const Matrica&) const;

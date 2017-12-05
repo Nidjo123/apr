@@ -108,6 +108,13 @@ Matrica<T>::Matrica(Matrica&& m) : elem(m.elem), perm(m.perm) {
   
 }
 
+template<typename T>
+Matrica<T>::Matrica(const std::valarray<T>& x) : elem(x.size()), perm(x.size()) {
+  elem.assign(x.begin(), x.end());
+
+  for (int i = 0; i < x.size(); i++) perm[i] = i;
+}
+
 // destruktor
 template<typename T>
 Matrica<T>::~Matrica() {
@@ -214,10 +221,66 @@ Matrica<T> Matrica<T>::operator-(const Matrica<T>& M) const {
   return Matrica<T>(*this) -= M;
 }
 
+template<typename T>
+Matrica<T>::operator std::valarray<T>() const {
+  const pii dims = dim();
+
+  if (dims.second != 1) {
+    throw Matrica_exception("Matrica nije jednostupcana!");
+  }
+
+  const int n = dims.first;
+
+  std::valarray<T> res(n);
+
+  for (int i = 0; i < n; i++) {
+    res[i] = (*this)[i][0];
+  }
+
+  return res;
+}
+
 // jesu li matrice A i B ulancane?
 template<typename T>
 bool ulancane(Matrica<T> A, Matrica<T> B) {
   return A.dim().second == B.dim().first;
+}
+
+template<typename T>
+void Matrica<T>::permute(Matrica<T> &A) const {
+  A.perm = perm;
+}
+
+// inverz matrica
+template<typename T>
+Matrica<T> Matrica<T>::inv() const {
+  if (!kvadratna()) {
+    throw Matrica_exception("Ne znam naci inverz nekvadratne matrice!");
+  }
+
+  const int n = dim().first;
+  
+  Matrica<T> res(n, n);
+
+  Matricad tmp(n);
+  
+  Matricad LUP = this->LUP_dekompozicija(tmp);
+
+  for (int i = 0; i < n; i++) {
+    Matrica<T> e(n, 1);
+    e[i][0] = 1.0;
+
+    e.permute(LUP);
+
+    Matricad y{LUP.supstitucija_unaprijed(e)};
+    Matricad x{LUP.supstitucija_unatrag(y)};
+
+    for (int j = 0; j < n; j++) {
+      res[j][i] = x[j][0];
+    }
+  }
+
+  return res;
 }
 
 // transponiranje matrice
@@ -506,6 +569,7 @@ Matrica<T> Matrica<T>::LUP_dekompozicija(Matrica& b) const {
       }
     }
 
+    std::cout << "Korak - " << std::endl;
     A.ispis();
   }
 
@@ -602,3 +666,4 @@ int main2(int argc, char *argv[]) {
 
   return 0;
 } 
+
