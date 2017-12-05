@@ -52,9 +52,20 @@ void drugi() {
   std::cout << "Vrijednost u minimumu: " << f1(ming1) << std::endl;
   f1.reset();
 
+  std::cout << "\nNewton-Raphson s linijskim pretrazivanjem:" << std::endl;
+
+  const valarray_d minnr1 = newton_raphson(f1, x0_1, 1e-6, true, true);
+  std::cout << "Broj poziva funkcije: " << f1.fcall_count() << std::endl;
+  std::cout << "Broj racunanja gradijenta: " << f1.gradient_count() << std::endl;
+  std::cout << "Broj racunanja Hessijana: " << f1.hessian_count() << std::endl;
+  std::cout << "Minimum: ";
+  ispis(minnr1);
+  std::cout << "Vrijednost u minimumu: " << f1(minnr1) << std::endl;
+  f1.reset();
+
 
   std::cout << "\n\nFunkcija2:" << std::endl;
-    std::cout << "Gradijentni spust s linijskim pretrazivanjem:" << std::endl;
+  std::cout << "Gradijentni spust s linijskim pretrazivanjem:" << std::endl;
 
   const valarray_d ming2 = gradijentni_spust(f2, x0_2);
   std::cout << "Broj poziva funkcije: " << f2.fcall_count() << std::endl;
@@ -62,6 +73,17 @@ void drugi() {
   std::cout << "Minimum: ";
   ispis(ming2);
   std::cout << "Vrijednost u minimumu: " << f2(ming2) << std::endl;
+  f2.reset();
+
+  std::cout << "\nNewton-Raphson s linijskim pretrazivanjem:" << std::endl;
+
+  const valarray_d minnr2 = newton_raphson(f2, x0_2);
+  std::cout << "Broj poziva funkcije: " << f2.fcall_count() << std::endl;
+  std::cout << "Broj racunanja gradijenta: " << f2.gradient_count() << std::endl;
+  std::cout << "Broj racunanja Hessijana: " << f2.hessian_count() << std::endl;
+  std::cout << "Minimum: ";
+  ispis(minnr2);
+  std::cout << "Vrijednost u minimumu: " << f2(minnr2) << std::endl;
   f2.reset();
 }
 

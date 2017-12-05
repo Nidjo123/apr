@@ -1,7 +1,7 @@
-#include <cmath>
-#include <cstdio>
 #include <iostream>
 #include <algorithm>
+#include <cmath>
+#include <cstdio>
 #include <limits>
 #include "Matrica.hpp"
 #include "Optimizacija.hpp"
@@ -11,6 +11,7 @@ using valarray_d = std::valarray<double>;
 using Matrica_d = Matrica<double>;
 
 const double k = 0.5 * (sqrt(5.0) - 1.0);
+const unsigned MAX_BEZ_POMAKA = 100;
 
 double norm(const std::valarray<double> x) {
   double s = 0;
@@ -325,8 +326,6 @@ valarray_d gradijentni_spust(Funkcija &f, std::valarray<double> x_0, double eps,
 
   double min = std::numeric_limits<double>::infinity();
   unsigned bez_pomaka = 0;
-
-  const unsigned MAX_BEZ_POMAKA = 100;
   
   do {
     gradient = f.gradient(x);
@@ -358,7 +357,7 @@ valarray_d gradijentni_spust(Funkcija &f, std::valarray<double> x_0, double eps,
       bez_pomaka = 0;
     } else {
       if (++bez_pomaka > MAX_BEZ_POMAKA) {
-	std::cout << "Gradijentni spust je zapeo!" << std::endl;
+	std::cout << "Gradijentni spust je zaglavio!" << std::endl;
 	break;
       }
     }
@@ -372,11 +371,50 @@ valarray_d newton_raphson(Funkcija &f, valarray_d x_0, double eps, bool linijsko
   valarray_d dx;
   valarray_d x = x_0;
 
+  double min = std::numeric_limits<double>::infinity();
+  unsigned bez_pomaka = 0;
+
   do {
     valarray_d gradient = f.gradient(x);
     Matricad H = f.hessian(x);
 
-    dx = H.inv() * gradient;
+    dx = -H.inv() * Matricad(gradient);
+
+    if (verbose) {
+      std::cout << "========\nTrenutna tocka: ";
+      ispis(x);
+      std::cout << "Pomak dx: ";
+      ispis(dx);
+    }
+
+    if (linijsko) {
+      // linijsko pretrazivanje
+      FunkcijaLinijsko fl(f, x, dx);
+
+      const double lmin = zlatni_rez(fl, 0, eps, false);
+
+      if (verbose) {
+	std::cout << "Pronadjena tocka u smjeru dx: ";
+	ispis(lmin*dx);
+	std::cout << "========" << std::endl;
+      }
+
+      x += lmin * dx;
+    } else {
+      x += dx;
+    }
+
+    const double fval = f(x);
+
+    if (fval < min) {
+      min = fval;
+      bez_pomaka = 0;
+    } else {
+      if (++bez_pomaka > MAX_BEZ_POMAKA) {
+	std::cout << "Newton-Raphson je zaglavio!" << std::endl;
+	break;
+      }
+    }
   } while(norm(dx) >= eps);
 
   return x;

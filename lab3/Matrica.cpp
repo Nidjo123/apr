@@ -110,7 +110,9 @@ Matrica<T>::Matrica(Matrica&& m) : elem(m.elem), perm(m.perm) {
 
 template<typename T>
 Matrica<T>::Matrica(const std::valarray<T>& x) : elem(x.size()), perm(x.size()) {
-  elem.assign(x.begin(), x.end());
+  for (int i = 0; i < x.size(); i++) {
+    elem[i].push_back(x[i]);
+  }
 
   for (int i = 0; i < x.size(); i++) perm[i] = i;
 }
@@ -253,7 +255,7 @@ void Matrica<T>::permute(Matrica<T> &A) const {
 
 // inverz matrica
 template<typename T>
-Matrica<T> Matrica<T>::inv() const {
+Matrica<T> Matrica<T>::inv() const { 
   if (!kvadratna()) {
     throw Matrica_exception("Ne znam naci inverz nekvadratne matrice!");
   }
@@ -453,8 +455,8 @@ Matrica<T> Matrica<T>::supstitucija_unaprijed(const Matrica<T>& b) const {
   // ova matrica mora biti kvadratna
   if (!kvadratna()) throw Matrica_exception("Matrica nije kvadratna!");
 
-  (*this).ispis();
-  b.ispis();
+  //(*this).ispis();
+  //b.ispis();
   
   // broj redaka ove matrice i slobodnog vektora se mora podudarati
   if (dims.first != b.dim().first) throw std::invalid_argument("Dimenzije matrice i slobodnog vektora se ne podudaraju!");
@@ -511,7 +513,7 @@ Matrica<T> Matrica<T>::LU_dekompozicija() const {
 
   // prvi redak ostaje isti, krecemo od drugog retka
   for (int i = 0; i < N - 1; i++) {
-    std::cout << "Stozerni element: " << A[i][i] << std::endl;
+    //std::cout << "Stozerni element: " << A[i][i] << std::endl;
     if (std::abs(A[i][i]) < eps) throw Matrica_exception("Stozerni element je 0 ili priblizno nula! Stajem!");
     
     for (int j = i + 1; j < N; j++) {
@@ -520,7 +522,7 @@ Matrica<T> Matrica<T>::LU_dekompozicija() const {
 	A[j][k] -= A[j][i] * A[i][k];
       }
     }
-    A.ispis();
+    //A.ispis();
   }
 
   if (A.nule_na_dijagonali()) throw Matrica_exception("Sustav nije rjesiv!");
@@ -552,9 +554,9 @@ Matrica<T> Matrica<T>::LUP_dekompozicija(Matrica& b) const {
     
     // zamijeni trenutni redak i redak s najvecim elementom
     if (i != max_i) {
-      std::cout << "Mijenjam retke " << i << " i " << max_i << std::endl;
+      //std::cout << "Mijenjam retke " << i << " i " << max_i << std::endl;
       A.zamijeni_retke(i, max_i);
-      A.ispis();
+      //A.ispis();
       // ne smijemo zaboraviti permutirati i retke matrice b
       b.zamijeni_retke(i, max_i);
     }
@@ -569,8 +571,8 @@ Matrica<T> Matrica<T>::LUP_dekompozicija(Matrica& b) const {
       }
     }
 
-    std::cout << "Korak - " << std::endl;
-    A.ispis();
+    //std::cout << "Korak - " << std::endl;
+    //A.ispis();
   }
 
   if (A.nule_na_dijagonali()) throw Matrica_exception("Sustav nije rjesiv!");
@@ -667,3 +669,15 @@ int main2(int argc, char *argv[]) {
   return 0;
 } 
 
+
+int main2() {
+  Matricad A("inverz.txt");
+
+  A.inv().ispis();
+
+  std::valarray<double> x = {1, 2, 3};
+  
+  std::valarray<double> xx = (A * Matricad(x));
+
+  for (auto &xi : xx) std::cout << xi << std::endl;
+}
