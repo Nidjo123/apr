@@ -55,6 +55,10 @@ bool ImplicitConstraint::check(const valarray_d &x) {
   return f(x) >= 0;
 }
 
+double ImplicitConstraint::operator()(const valarray_d &x) const {
+  return f(x);
+}
+
 Funkcija1D::Funkcija1D(Funkcija &fun, valarray_d x_const, int ind) : f(fun), i(ind), x_(x_const) {
 
 }

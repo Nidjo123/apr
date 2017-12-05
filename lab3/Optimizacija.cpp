@@ -593,3 +593,21 @@ valarray_d box(Funkcija &f, valarray_d x0, std::vector<ExplicitConstraint> exps,
 
   return xc;
 }
+
+valarray_d find_new_x0(const valarray &x0, std::vector<ImplicitConstraint> imps) {
+  FunkcijaOgranicenja G(imps);
+
+  return hooke_jeeves(G, x0);
+}
+
+valarray_d transformed_constraints(Funkcija &f, std::valarray<double> x0, std::vector<ExplicitConstraint> exps, std::vector<ImplicitConstraint> imps, double t, double eps, bool verbose) {
+  std::vector<ImplicitConstraint> unsatisfied;
+
+  for (auto &c : imps) {
+    if (!c.check(x0)) {
+      unsatisfied.push_back(c);
+    }
+  }
+
+  x0 = find_new_x0(x0, unsatisfied);
+}

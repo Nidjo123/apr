@@ -42,6 +42,8 @@ public:
   ImplicitConstraint(std::function<bool(const std::valarray<double>)> f);
 
   virtual bool check(const std::valarray<double> &x);
+
+  double operator()(const std::valarray<double> &x) const;
   
 private:
   std::function<bool(const std::valarray<double>)> f;
