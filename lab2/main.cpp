@@ -23,7 +23,7 @@ valarray_d simpleks(Funkcija &f, int fi, valarray_d x_0, double pomak = 1.0) {
   std::cout << "Simpleks na funkciji " << fi << " iz pocetne tocke ";
   ispis(x_0);
   valarray_d res = nelder_mead_simpleks(f, x_0, pomak, 1, 0.5,
-				2, 0.5, 1e-6, false);
+				2, 0.5, 1e-6, true);
   std::cout << "Pronadjeni minimum: ";
   ispis(res);
   std::cout << " u " << f.broj_poziva() << " poziva funkcije." << std::endl;
@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
     t = 10;
     
     koordinatno(f32, 3, {t}, {0.5});
-    simpleks(f32, 3, {t}, 0.01);
+    simpleks(f32, 3, {t});
     hj(f32, 3, {t}, {0.5}, {1e-6});
     std::cout << std::endl;
 

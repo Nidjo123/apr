@@ -546,7 +546,8 @@ void test() {
   }
 }
 
-int main(int argc, char *argv[]) {
+
+int main2(int argc, char *argv[]) {
   //test();
 
   if (argc < 4) {

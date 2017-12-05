@@ -9,6 +9,16 @@ using valarray_d = std::valarray<double>;
 
 const double k = 0.5 * (sqrt(5.0) - 1.0);
 
+double norm(const std::valarray<double> x) {
+  double s = 0;
+
+  for (const auto& xi : x) {
+    s += xi*xi;
+  }
+
+  return sqrt(s);
+}
+
 double zlatni_rez(Funkcija &f, double a, double b, double e, bool verbose = true) {
   double c = b - k * (b - a);
   double d = a + k * (b - a);
@@ -304,4 +314,35 @@ valarray_d hooke_jeeves(Funkcija &f, valarray_d x_0, valarray_d dx, valarray_d e
   } while(!kraj);
 
   return xb;
+}
+
+valarray_d gradijentni_spust(Funkcija &f, std::valarray<double> x_0, double eps, bool linijsko, bool verbose) {
+  valarray_d gradient;
+  valarray_d x = x_0;
+  
+  do {
+    gradient = f.gradient(x);
+
+    if (verbose) {
+      std::cout << "Trenutna tocka: ";
+      ispis(x);
+      std::cout << "Gradijent: ";
+      ispis(gradient);
+    }
+    
+    if (linijsko) {
+      // pronadji minimum u smjeru gradijenta i pomakni se tamo
+      FunkcijaLinijsko fl(f, x, gradient);
+
+      const double lmin = zlatni_rez(fl, 0, eps, false);
+
+      x += lmin * gradient;
+    } else {
+      // pomakni se za citav (nenormirani) iznos gradijenta
+      // ali u suprotnom smjeru od gradijenta!
+      x -= gradient;
+    }
+  } while (norm(gradient) > eps);
+
+  return x;
 }
