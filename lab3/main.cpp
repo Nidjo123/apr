@@ -137,7 +137,7 @@ void cetvrti() {
   std::vector<ImplicitConstraint> imps = {ImplicitConstraint{[](valarray_d x) { return x[1] - x[0];}},
 					  ImplicitConstraint{[](valarray_d x) { return 2.0 - x[0];}}};
 
-  const valarray_d min1 = transformed_constraints(f1, x0_1, {}, imps, 1.0, 1e-6, true);
+  const valarray_d min1 = transformed_constraints(f1, x0_1, {}, imps, 10.0, 1e-6, true);
 
   std::cout << "Broj poziva funkcije: " << f1.fcall_count() << std::endl;
   std::cout << "Minimum: ";
@@ -146,7 +146,7 @@ void cetvrti() {
 
 
   std::cout << "Funkcija2:\n";
-  const valarray_d min2 = transformed_constraints(f2, x0_2, {}, imps, 1.0, 1e-6, true);
+  const valarray_d min2 = transformed_constraints(f2, x0_2, {}, imps, 10.0, 1e-6, true);
 
   std::cout << "Broj poziva funkcije: " << f2.fcall_count() << std::endl;
   std::cout << "Minimum: ";
@@ -167,7 +167,7 @@ void peti() {
 
   const valarray_d x0 = {5.0, 5.0};
   
-  const valarray_d min = transformed_constraints(f4, x0, exps, imps, 1.0, 1e-6, true);
+  const valarray_d min = transformed_constraints(f4, x0, exps, imps, 10.0, 1e-6, true);
 
   std::cout << "Poziva funkcije: " << f4.fcall_count() << std::endl;
   std::cout << "Minimum: ";
