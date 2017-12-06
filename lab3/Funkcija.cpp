@@ -76,7 +76,9 @@ double FunkcijaOgranicenja::operator()(std::valarray<double> x) {
   double res = 0;
 
   for (auto &c : constraints) {
-    res -= c(x);
+    if (!c.check(x)) {
+      res -= c(x);
+    }
   }
 
   return res;
@@ -99,9 +101,9 @@ double FunkcijaBezOgranicenja::operator()(std::valarray<double> x) {
   
   for (auto &ic : imps) {
     if (!ic.check(x)) {
-      res += std::numeric_limits<double>::infinity();
+      return std::numeric_limits<double>::infinity();
     } else {
-      res += -tinv * log(ic(x));
+      res -= tinv * log(ic(x));
     }
   }
 

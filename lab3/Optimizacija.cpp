@@ -610,19 +610,31 @@ valarray_d find_interior_x0(const valarray_d &x0, std::vector<ImplicitConstraint
   
   FunkcijaOgranicenja G(imps);
 
-  return newton_raphson(G, x0);
+  const valarray_d dx(1.0, x0.size());
+  const valarray_d eps_(0.25, x0.size());
+  
+  return hooke_jeeves(G, x0, dx, eps_);
 }
 
 valarray_d transformed_constraints(Funkcija &f, std::valarray<double> x0, std::vector<ExplicitConstraint> exps, std::vector<ImplicitConstraint> imps, double t, double eps, bool verbose) {
-  std::vector<ImplicitConstraint> unsatisfied;
+
+  bool satisfied = true;
 
   for (auto &c : imps) {
     if (!c.check(x0)) {
-      unsatisfied.push_back(c);
+      satisfied = false;
+      break;
     }
   }
 
-  x0 = find_interior_x0(x0, unsatisfied);
+  if (!satisfied) {
+    x0 = find_interior_x0(x0, imps);
+  }
+
+  if (verbose) {
+    std::cout << "x0 = ";
+    ispis(x0);
+  }
 
   FunkcijaBezOgranicenja fbo(f, exps, imps);
 
@@ -632,21 +644,31 @@ valarray_d transformed_constraints(Funkcija &f, std::valarray<double> x0, std::v
   valarray_d prev_x = x0;
   valarray_d x = x0;
 
-  valarray_d dx(1.0, n);
-  valarray_d eps_(0.25, n);
+  const valarray_d dx(1.0, n);
+  const valarray_d eps_(1e-6, n);
   
   do {
     fbo.set_t(t);
-    x = hooke_jeeves(fbo, x, dx, eps_);
-    ispis(x);
     t *= 10;
+    
+    x = hooke_jeeves(fbo, x, dx, eps_);
+
+    //x = nelder_mead_simpleks(fbo, x0);
+    
+    if (verbose) {
+      std::cout << "t = " << t << std::endl;
+      std::cout << "Hooke-Jeeves je nasao novu tocku: ";
+      ispis(x);
+    }
 
     done = true;
     for (int i = 0; i < n; i++) {
-      if (abs(x[i] - eps) >= eps) {
+      if (abs(x[i] - prev_x[i]) >= eps) {
 	done = false;
       }
     }
+
+    prev_x = x;
   } while(!done);
 
   return x;

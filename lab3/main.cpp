@@ -123,6 +123,58 @@ void treci() {
   std::cout << "Vrijednost u minimumu: " << f2(min2) << std::endl;
 }
 
+void cetvrti() {
+  std::cout << "Cetvrti zadatak\n";
+
+  std::cout << "Funkcija1:\n";
+
+  Funkcija1 f1;
+  Funkcija2 f2;
+
+  const valarray_d x0_1 = {-1.9, 2};
+  const valarray_d x0_2 = {0.1, 0.3};
+  
+  std::vector<ImplicitConstraint> imps = {ImplicitConstraint{[](valarray_d x) { return x[1] - x[0];}},
+					  ImplicitConstraint{[](valarray_d x) { return 2.0 - x[0];}}};
+
+  const valarray_d min1 = transformed_constraints(f1, x0_1, {}, imps, 1.0, 1e-6, true);
+
+  std::cout << "Broj poziva funkcije: " << f1.fcall_count() << std::endl;
+  std::cout << "Minimum: ";
+  ispis(min1);
+  std::cout << "Vrijednost funkcije u minimumu: " << f1(min1) << std::endl;
+
+
+  std::cout << "Funkcija2:\n";
+  const valarray_d min2 = transformed_constraints(f2, x0_2, {}, imps, 1.0, 1e-6, true);
+
+  std::cout << "Broj poziva funkcije: " << f2.fcall_count() << std::endl;
+  std::cout << "Minimum: ";
+  ispis(min2);
+  std::cout << "Vrijednost funkcije u minimumu: " << f2(min2) << std::endl;
+}
+
+void peti() {
+  std::cout << "Peti zadatak\n";
+
+  std::cout << "Funkcija4:\n";
+
+  Funkcija4 f4;
+
+  std::vector<ImplicitConstraint> imps = {ImplicitConstraint{[](valarray_d x) { return 3.0 - x[0] - x[1];}},
+					  ImplicitConstraint{[](valarray_d x) { return 3.0 + 1.5*x[0] - x[1];}}};
+  std::vector<ExplicitConstraint> exps = {ExplicitConstraint{[](valarray_d x) { return x[1] - 1.0;}}};
+
+  const valarray_d x0 = {5.0, 5.0};
+  
+  const valarray_d min = transformed_constraints(f4, x0, exps, imps, 1.0, 1e-6, true);
+
+  std::cout << "Poziva funkcije: " << f4.fcall_count() << std::endl;
+  std::cout << "Minimum: ";
+  ispis(min);
+  std::cout << "Vrijednost funkcije u minimumu: " << f4(min) << std::endl;
+}
+
 int main(int argc, char* argv[]) {
 
   srand(time(NULL));
@@ -141,6 +193,14 @@ int main(int argc, char* argv[]) {
 
     case 3:
       treci();
+      break;
+
+    case 4:
+      cetvrti();
+      break;
+
+    case 5:
+      peti();
       break;
 
     default:
