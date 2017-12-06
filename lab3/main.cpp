@@ -1,5 +1,7 @@
 #include <iostream>
 #include <cstdio>
+#include <cstdlib>
+#include <ctime>
 #include "Funkcija.hpp"
 #include "Optimizacija.hpp"
 #include "Util.hpp"
@@ -9,6 +11,8 @@ using valarray_d = std::valarray<double>;
 
 void prvi() {
   std::cout << "Prvi zadatak" << std::endl;
+
+  std::cout << "Funkcija3\n";
   
   Funkcija3 f;
   const valarray_d x0 = {0, 0};
@@ -95,7 +99,7 @@ void treci() {
   
   std::vector<ExplicitConstraint> exps = {ExplicitConstraint{{-100.0, -100.0}, {100.0, 100.0}}};
   std::vector<ImplicitConstraint> imps = {ImplicitConstraint{[](valarray_d x) { return x[1] - x[0];}},
-					  ImplicitConstraint{[](valarray_d x) { return 1.0 - x[0];}}};
+					  ImplicitConstraint{[](valarray_d x) { return 2.0 - x[0];}}};
 
   const valarray_d x0_1 = {-1.9, 2.0};
   const valarray_d x0_2 = {0.1, 0.3};
@@ -120,6 +124,8 @@ void treci() {
 }
 
 int main(int argc, char* argv[]) {
+
+  srand(time(NULL));
   
   if (argc >= 2) {
     int zadatak = atoi(argv[1]);

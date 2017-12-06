@@ -30,23 +30,53 @@ public:
 class ExplicitConstraint : public Constraint {
 public:
   ExplicitConstraint(const std::valarray<double> x1, const std::valarray<double> x2);
+  ExplicitConstraint(std::function<double(const std::valarray<double>)> f);
 
   virtual bool check(const std::valarray<double> &x);
 
+  virtual double operator()(const std::valarray<double> &x);
+
   const std::valarray<double> x1;
   const std::valarray<double> x2;
+
+private:
+  std::function<double(const std::valarray<double>)> f;
 };
 
 class ImplicitConstraint : public Constraint {
 public:
-  ImplicitConstraint(std::function<bool(const std::valarray<double>)> f);
+  ImplicitConstraint(std::function<double(const std::valarray<double>)> f);
 
   virtual bool check(const std::valarray<double> &x);
 
-  double operator()(const std::valarray<double> &x) const;
+  double operator()(const std::valarray<double> &x);
   
 private:
-  std::function<bool(const std::valarray<double>)> f;
+  std::function<double(const std::valarray<double>)> f;
+};
+
+class FunkcijaOgranicenja : public Funkcija {
+public:
+  FunkcijaOgranicenja(std::vector<ImplicitConstraint> &constraints);
+  virtual double operator()(std::valarray<double> x);
+
+private:
+  std::vector<ImplicitConstraint> constraints;
+};
+
+class FunkcijaBezOgranicenja : public Funkcija {
+ public:
+  FunkcijaBezOgranicenja(Funkcija &f, std::vector<ExplicitConstraint> exps, std::vector<ImplicitConstraint> imps);
+
+  virtual double operator()(std::valarray<double> x);
+
+  void set_t(double t);
+
+ private:
+  double t;
+  Funkcija &f;
+  std::vector<ExplicitConstraint> exps;
+  std::vector<ImplicitConstraint> imps;
 };
 
 class Funkcija1D : public Funkcija {

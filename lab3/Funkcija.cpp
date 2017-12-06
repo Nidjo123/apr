@@ -42,12 +42,20 @@ ExplicitConstraint::ExplicitConstraint(const valarray_d x1, const valarray_d x2)
   
 }
 
+ExplicitConstraint::ExplicitConstraint(std::function<double(const std::valarray<double>)> f) : f(f) {
+
+}
+
 bool ExplicitConstraint::check(const valarray_d &x) {
   const valarray_b res = (x1 <= x) & (x <= x2);
   return std::all_of(std::begin(res), std::end(res), [](bool x) {return x;});
 }
 
-ImplicitConstraint::ImplicitConstraint(std::function<bool(const valarray_d)> f) : f(f) {
+double ExplicitConstraint::operator()(const valarray_d &x) {
+  return f(x);
+}
+
+ImplicitConstraint::ImplicitConstraint(std::function<double(const valarray_d)> f) : f(f) {
 
 }
 
@@ -55,8 +63,53 @@ bool ImplicitConstraint::check(const valarray_d &x) {
   return f(x) >= 0;
 }
 
-double ImplicitConstraint::operator()(const valarray_d &x) const {
+double ImplicitConstraint::operator()(const valarray_d &x) {
   return f(x);
+}
+
+FunkcijaOgranicenja::FunkcijaOgranicenja(std::vector<ImplicitConstraint> &constraints)
+  : constraints(constraints) {
+
+}
+
+double FunkcijaOgranicenja::operator()(std::valarray<double> x) {  
+  double res = 0;
+
+  for (auto &c : constraints) {
+    res -= c(x);
+  }
+
+  return res;
+}
+
+FunkcijaBezOgranicenja::FunkcijaBezOgranicenja(Funkcija &f, std::vector<ExplicitConstraint> exps, std::vector<ImplicitConstraint> imps)
+  : f(f), exps(exps), imps(imps) {
+
+}
+
+double FunkcijaBezOgranicenja::operator()(std::valarray<double> x) {
+  double res = f(x);
+
+  for (auto &ec : exps) {
+    const double eval = ec(x);
+    res += t * eval * eval;
+  }
+
+  const double tinv = 1.0 / t;
+  
+  for (auto &ic : imps) {
+    if (!ic.check(x)) {
+      res += std::numeric_limits<double>::infinity();
+    } else {
+      res += -tinv * log(ic(x));
+    }
+  }
+
+  return res;
+}
+
+void FunkcijaBezOgranicenja::set_t(double t) {
+  this->t = t;
 }
 
 Funkcija1D::Funkcija1D(Funkcija &fun, valarray_d x_const, int ind) : f(fun), i(ind), x_(x_const) {

@@ -449,8 +449,6 @@ valarray_d newton_raphson(Funkcija &f, valarray_d x_0, double eps, bool linijsko
 
 valarray_d box(Funkcija &f, valarray_d x0, std::vector<ExplicitConstraint> exps, std::vector<ImplicitConstraint> imps, double alpha, double eps, bool verbose) {
 
-  srand(time(NULL));
-
   for (auto &ec : exps) {
     if (!ec.check(x0)) {
       std::cout << "x0 ne zadovoljava eksplicitno ogranicenje!" << std::endl;
@@ -505,6 +503,9 @@ valarray_d box(Funkcija &f, valarray_d x0, std::vector<ExplicitConstraint> exps,
 
   valarray_d xh;
   std::vector<double> fvals(2*n);
+
+  unsigned koraka = 0;
+  double minfval = f(xc);
   
   do {
     int h = 0, h2 = 1;
@@ -589,15 +590,27 @@ valarray_d box(Funkcija &f, valarray_d x0, std::vector<ExplicitConstraint> exps,
       std::cout << "Xc: ";
       ispis(xc);
     }
+
+    double fxc = f(xc);
+
+    if (fxc < minfval) {
+      minfval = fxc;
+      koraka = 0;
+    } else if (++koraka > MAX_BEZ_POMAKA) {
+      std::cout << "Box je zapeo!" << std::endl;
+      break;
+    }
   } while(norm(xh - xc) >= eps);
 
   return xc;
 }
 
-valarray_d find_new_x0(const valarray &x0, std::vector<ImplicitConstraint> imps) {
+valarray_d find_interior_x0(const valarray_d &x0, std::vector<ImplicitConstraint> imps) {
+  if (imps.size() == 0) return x0;
+  
   FunkcijaOgranicenja G(imps);
 
-  return hooke_jeeves(G, x0);
+  return newton_raphson(G, x0);
 }
 
 valarray_d transformed_constraints(Funkcija &f, std::valarray<double> x0, std::vector<ExplicitConstraint> exps, std::vector<ImplicitConstraint> imps, double t, double eps, bool verbose) {
@@ -609,5 +622,32 @@ valarray_d transformed_constraints(Funkcija &f, std::valarray<double> x0, std::v
     }
   }
 
-  x0 = find_new_x0(x0, unsatisfied);
+  x0 = find_interior_x0(x0, unsatisfied);
+
+  FunkcijaBezOgranicenja fbo(f, exps, imps);
+
+  bool done;
+
+  const int n = x0.size();
+  valarray_d prev_x = x0;
+  valarray_d x = x0;
+
+  valarray_d dx(1.0, n);
+  valarray_d eps_(0.25, n);
+  
+  do {
+    fbo.set_t(t);
+    x = hooke_jeeves(fbo, x, dx, eps_);
+    ispis(x);
+    t *= 10;
+
+    done = true;
+    for (int i = 0; i < n; i++) {
+      if (abs(x[i] - eps) >= eps) {
+	done = false;
+      }
+    }
+  } while(!done);
+
+  return x;
 }
