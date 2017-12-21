@@ -1,0 +1,8 @@
+
+integrator: Main.o
+
+Main.o: Main.cpp
+	g++ -std=c++11 -c Matrica.cpp
+
+Matrica.o: Matrica.cpp Matrica.hpp
+	g++ -std=c++11 -c Matrica.cpp
