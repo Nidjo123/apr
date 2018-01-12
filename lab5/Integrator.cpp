@@ -1,4 +1,5 @@
 #include "Integrator.hpp"
+#include "Matrica.hpp"
 #include <iostream>
 
 void print(Matricad &x) {
@@ -20,6 +21,19 @@ Matricad RungeKuttaIntegrator::integrate(Matricad A, Matricad x, Matricad B, dou
     Matricad n4 = A*(xk + T*n3) + B;
 
     xk = xk + T/6.0*(n1 + 2*n2 + 2*n3 + n4);
+    
+    if (verbose) {
+      print(xk);
+    }
+  }
+
+  return xk;
+}
+
+Matricad TrapezoidIntegrator::integrate(Matricad A, Matricad x, Matricad B, double T, double tmax, bool verbose) {
+  Matricad xk = x;
+
+  for (double t = T; t <= tmax; t += T) {
 
     if (verbose) {
       print(xk);

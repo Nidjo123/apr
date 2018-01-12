@@ -1,11 +1,4 @@
 #include "Matrica.hpp"
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <stdexcept>
-#include <cmath>
-
-using pii = std::pair<int, int>;
 
 //////////// Matrica_exception
 Matrica_exception::Matrica_exception() {

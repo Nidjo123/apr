@@ -1,0 +1,53 @@
+                 U __cxa_allocate_exception
+                 U __cxa_atexit
+                 U __cxa_begin_catch
+                 U __cxa_end_catch
+                 U __cxa_free_exception
+                 U __cxa_rethrow
+                 U __cxa_throw
+                 U __dso_handle
+                 U _GLOBAL_OFFSET_TABLE_
+                 U __gxx_personality_v0
+                 U memmove
+                 U memset
+                 U _Unwind_Resume
+                 U operator delete(void*)
+                 U Matrica_exception::Matrica_exception(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)
+                 U Matrica_exception::~Matrica_exception()
+                 U std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::empty() const
+                 U std::basic_ios<char, std::char_traits<char> >::eof() const
+                 U std::basic_ios<char, std::char_traits<char> >::operator bool() const
+                 U std::basic_ios<char, std::char_traits<char> >::operator!() const
+                 U std::allocator<char>::allocator()
+                 U std::allocator<char>::~allocator()
+                 U std::istream::operator>>(double&)
+                 U std::ostream::operator<<(double)
+                 U std::ostream::operator<<(int)
+                 U std::ostream::operator<<(std::ostream& (*)(std::ostream&))
+                 U std::basic_ifstream<char, std::char_traits<char> >::basic_ifstream(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::_Ios_Openmode)
+                 U std::basic_ifstream<char, std::char_traits<char> >::~basic_ifstream()
+                 U std::basic_ofstream<char, std::char_traits<char> >::basic_ofstream(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::_Ios_Openmode)
+                 U std::basic_ofstream<char, std::char_traits<char> >::~basic_ofstream()
+                 U std::invalid_argument::invalid_argument(char const*)
+                 U std::invalid_argument::~invalid_argument()
+                 U std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(char const*, std::allocator<char> const&)
+                 U std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string()
+                 U std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()
+                 U std::__cxx11::basic_istringstream<char, std::char_traits<char>, std::allocator<char> >::basic_istringstream(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::_Ios_Openmode)
+                 U std::__cxx11::basic_istringstream<char, std::char_traits<char>, std::allocator<char> >::~basic_istringstream()
+                 U std::ios_base::Init::Init()
+                 U std::ios_base::Init::~Init()
+                 U operator new(unsigned long)
+                 U std::__throw_bad_alloc()
+                 U std::__throw_length_error(char const*)
+                 U std::cerr
+                 U std::cout
+                 U std::basic_ostream<char, std::char_traits<char> >& std::endl<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&)
+                 U std::basic_istream<char, std::char_traits<char> >& std::getline<char, std::char_traits<char>, std::allocator<char> >(std::basic_istream<char, std::char_traits<char> >&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&)
+                 U std::basic_ostream<char, std::char_traits<char> >& std::operator<< <char, std::char_traits<char>, std::allocator<char> >(std::basic_ostream<char, std::char_traits<char> >&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+                 U std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char)
+                 U std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*)
+                 U typeinfo for Matrica_exception
+                 U typeinfo for std::invalid_argument
+                 U vtable for __cxxabiv1::__class_type_info
+                 U vtable for __cxxabiv1::__si_class_type_info
