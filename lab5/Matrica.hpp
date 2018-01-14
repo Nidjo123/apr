@@ -283,11 +283,11 @@ Matrica<T>& Matrica<T>::operator+=(const Matrica<T>& M) {
   for (int i = 0; i < dims.first; i++) {
     for (int j = 0; j < dims.second; j++) {
       (*this)[i][j] += M[i][j];
-      std::cout << "(" << dim().first << ", " << dim().second << ")" << std::endl;
+      //std::cout << "(" << dim().first << ", " << dim().second << ")" << std::endl;
     }
   }
 
-  std::cout << "(" << dim().first << ", " << dim().second << ")" << std::endl;
+  //std::cout << "(" << dim().first << ", " << dim().second << ")" << std::endl;
 
   return *this;
 }

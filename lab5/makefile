@@ -1,4 +1,4 @@
-GXXFLAGS = -g -Wall
+GXXFLAGS = -g #-Wall
 
 integrator: Main.o Integrator.o Matrica.o
 	g++ -std=c++11 $(GXXFLAGS) -o integrator Main.o Matrica.o Integrator.o

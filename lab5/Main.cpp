@@ -43,6 +43,16 @@ void problem3(double T, double tmax, std::string type = "runge_kutta") {
   if (type == "runge_kutta") {
     integrator = &rki;
   }
+
+  Matricad A{"3A.txt"};
+  Matricad x{"3x.txt"};
+  Matricad B{"3B.txt"};
+
+  A.ispis();
+  x.ispis();
+  B.ispis();
+  
+  integrator->integrate(A, x, B, T, tmax, /* verbose: */ true);
 }
 
 void problem4(double T, double tmax, std::string type = "runge_kutta") {
@@ -51,6 +61,16 @@ void problem4(double T, double tmax, std::string type = "runge_kutta") {
   if (type == "runge_kutta") {
     integrator = &rki;
   }
+
+  Matricad A{"4A.txt"};
+  Matricad x{"4x.txt"};
+  Matricad B{"4B.txt"};
+
+  A.ispis();
+  x.ispis();
+  B.ispis();
+  
+  integrator->integrate(A, x, B, T, tmax, /* verbose: */ true);
 }
 
 int main(int argc, char *argv[]) {
@@ -63,12 +83,6 @@ int main(int argc, char *argv[]) {
 
   double T, tmax;
   std::string type;
-
-  Matricad A{"1.txt"};
-  Matricad B{"2.txt"};
-
-  (A+B).ispis();
-  
   if (problem == 3 || problem == 4) {
     std::cout << "Korak: ";
     std::cin >> T;
@@ -76,6 +90,8 @@ int main(int argc, char *argv[]) {
     std::cin >> tmax;
     std::cout << "(runge_kutta|trapez): ";
     std::cin >> type;
+
+    std::cout << "T=" << T << ", t_max=" << tmax << ", metoda:" << type << std::endl;
   }
   
   switch (problem) {
