@@ -63,10 +63,31 @@ Matricad RungeKuttaIntegrator::integrate(Matricad A, Matricad x, Matricad B, dou
 Matricad TrapezoidIntegrator::integrate(Matricad A, Matricad x, Matricad B, double T, double tmax, bool verbose) {
   Matricad xk = x;
 
+  std::ofstream ofs{"trapez.txt"};
+
+  if (!ofs) {
+    std::cerr << "Couldn't open file runge_kutta.txt!\n";
+    return xk;
+  }
+  
+  if (verbose) {
+    print(0, xk);
+    print(ofs, 0, xk);
+  }
+
+  const int n = A.dim().first;
+  Matricad U = Matricad::jedinicna(n);
+
+  const double Th = 0.5*T;
   for (double t = T; t <= tmax; t += T) {
+    Matricad R = (U-A*Th).inv() * (U+A*Th);
+    Matricad S = (U-A*Th).inv() * Th * B;
+
+    xk = R*xk + S;
 
     if (verbose) {
       print(t, xk);
+      print(ofs, t, xk);
     }
   }
 
