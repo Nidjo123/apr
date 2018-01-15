@@ -5,5 +5,3 @@ show title
 
 plot "trapez.txt" using 1:2 title "x_1" with lines,\
      "trapez.txt" using 1:3 title "x_2" with lines
-
-end
